@@ -12,11 +12,11 @@ namespace API.Controllers
     {
         
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts() //Ye normal function hi hai return type hai ek IReadOnlyList list Product type ka aur function ka naam hai GetProducts
+        public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts(string? brand,string? type, string? sort) //Ye normal function hi hai return type hai ek IReadOnlyList list Product type ka aur function ka naam hai GetProducts
         {
             //return await context.Products.ToListAsync();   //async await isiliyr use kr rhe hai kiuki agar maano bot badi query hai toh jb tak wo database se load nahi kr lega tab tak thread block ho jaygi. So database queries ke liye async await use kro.
            
-            return Ok(await repo.GetProductsAsync()); // isme type issue aata hai isiliye Ok() ke andar wrap krdia hai; Ye repository pattern ke baad ke changes hai
+            return Ok(await repo.GetProductsAsync(brand, type, sort)); // isme type issue aata hai isiliye Ok() ke andar wrap krdia hai; Ye repository pattern ke baad ke changes hai
         }
         
         [HttpGet("{id:int}")] // api/products/2
@@ -74,6 +74,17 @@ namespace API.Controllers
 
             return BadRequest("Problem deleting the product");
 
+        }
+        [HttpGet("brands")]
+        public async Task<ActionResult<IReadOnlyList<string>>> GetBrands()
+        {
+            return Ok(await repo.GetBrandsAsync());
+        }
+
+        [HttpGet("types")]
+        public async Task<ActionResult<IReadOnlyList<string>>> GetTypes()
+        {
+            return Ok(await repo.GetTypesAsync());
         }
         private bool ProductExists(int id)
         {
